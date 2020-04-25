@@ -1,6 +1,6 @@
 <div align="center">
     <h1>validation-sample</h1>
-    <img src="/public/readme_img.png">
+    <img height="50%" width="50%" src="/public/readme_img.png">
     <p>
         Vue.jsでバリデーションプラグインVeeValidateを用いた
         簡易的な入力値チェックのサンプルアプリケーションです。<br>
