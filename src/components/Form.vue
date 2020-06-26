@@ -26,10 +26,10 @@
         <validation-provider
           v-slot="{ errors, valid, invalid, untouched }"
           name="メールアドレス"
-          rules="required|email"
+          :rules="{required:true, email:true, regex:/^[a-zA-Z0-9_.-]+@rakus-partners.co.jp|^[a-zA-Z0-9_.-]+@rakus.co.jp/}"
         >
           <b-form-group
-            label="メールアドレス"
+            label="メールアドレス(社内ドメインのみ許可)"
             label-for="input-email"
             description=""
           >

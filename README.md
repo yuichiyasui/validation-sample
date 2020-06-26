@@ -4,7 +4,7 @@
         Vue.jsでバリデーションプラグインVeeValidateを用いた
         簡易的な入力値チェックのサンプルアプリケーションです。<br>
     </p>
-<img height="50%" width="50%" src="/public/readme_img.png">
+<img height="50%" width="50%" src="/public/vee_validate.gif">
 </div>
 <h2>使用環境</h2>
 <ul>
@@ -13,4 +13,3 @@
     <li>bootstrap-vue 2.12.0</li>
     <li>vee-validate 3.3.0</li>
 </ul>
-
