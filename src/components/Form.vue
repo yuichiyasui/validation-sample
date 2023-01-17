@@ -1,132 +1,180 @@
 <script lang="ts" setup>
 import { useField } from "vee-validate";
-import { ref, computed } from "vue";
-import {
-  required,
-  max,
-  email as isEmail,
-  integer,
-  between,
-  regex,
-} from "@vee-validate/rules";
+import { computed } from "vue";
 
-const name = useField<string>("name", (value) => {
-  if (required(value)) {
-    return "指名は必須項目です";
+const {
+  value: nameValue,
+  meta: nameMeta,
+  handleReset: handleResetName,
+  errorMessage: nameErrorMessage,
+} = useField<string>("name", (value) => {
+  if (!value) {
+    return "氏名は必須項目です";
   }
-  if (max(value, { length: 20 })) {
-    return "20文字以内で入力してください";
+  if (value.length > 20) {
+    return "氏名は20文字以内で入力してください";
   }
 
   return true;
 });
 
-const email = useField<string>("email", (value) => {
-  if (required(value)) {
+const {
+  value: emailValue,
+  meta: emailMeta,
+  handleReset: handleResetEmail,
+  errorMessage: emailErrorMessage,
+} = useField<string>("email", (value) => {
+  if (!value) {
     return "メールアドレスは必須項目です";
   }
-  if (
-    isEmail(value) ||
-    regex(value, {
-      regex: /^[a-zA-Z0-9_.-]+@gmail.com|^[a-zA-Z0-9_.-]+@yahoo.co.jp/,
-    })
-  ) {
+  if (!/^[a-zA-Z0-9_.-]+@gmail.com|^[a-zA-Z0-9_.-]+@yahoo.co.jp/.test(value)) {
     return "メールアドレスは有効なメールアドレスではありません";
   }
 
   return true;
 });
 
-const age = useField<string>("age", (value) => {
-  if (required(value)) {
+const {
+  value: ageValue,
+  meta: ageMeta,
+  handleReset: handleResetAge,
+  errorMessage: ageErrorMessage,
+} = useField<string>("age", (value) => {
+  if (!value) {
     return "年齢は必須項目です";
   }
-  if (integer(value)) {
+  if (!/\d{1,3}/.test(value)) {
     return "年齢は数値でなければありません";
   }
-  if (between(value, { min: 1, max: 100 })) {
+  if (Number(value) < 1 || Number(value) > 100) {
     return "年齢は1から100の間でなければありません";
   }
 
   return true;
 });
 
-const hasError = computed(() =>
-  [name.meta.valid, email.meta.valid, age.meta.valid].every(Boolean),
+const canSubmit = computed(() =>
+  [nameMeta.valid, emailMeta.valid, ageMeta.valid].every(Boolean),
 );
 
-const form = ref({
-  name: "",
-  email: "",
-  age: "",
-});
-const onSubmit = () => alert(form);
 const onReset = () => {
-  form.value = {
-    name: "",
-    email: "",
-    age: "",
-  };
+  handleResetName();
+  handleResetEmail();
+  handleResetAge();
+};
+
+const onSubmit = (event: Event) => {
+  event.preventDefault();
+  alert(
+    JSON.stringify({
+      name: nameValue.value,
+      email: emailValue.value,
+      age: ageValue.value,
+    }),
+  );
 };
 </script>
 
 <template>
-  <b-card class="text-left p-3" title="入力値チェック検証フォーム">
-    <b-card-text>
-      VeeValidateで入力値のチェックを行うフォームです。
-    </b-card-text>
-    <b-card-text>
-      <b-form-group label="氏名" label-for="input-name">
-        <b-form-input
-          id="input-name"
-          v-model="name.value"
-          type="text"
-          :state="name.meta.touched ? name.meta.valid : null"
-          placeholder="名前を入力してください"
-        ></b-form-input>
-        <b-form-invalid-feedback :state="!name.meta.valid">
-          {{ name.errorMessage }}
-        </b-form-invalid-feedback>
-      </b-form-group>
+  <form
+    class="border border-gray-400 rounded-md text-left p-10"
+    @submit="onSubmit"
+  >
+    <h1 class="text-lg font-bold mb-2">入力値チェック検証フォーム</h1>
+    <p class="mb-4">VeeValidateで入力値のチェックを行うフォームです。</p>
 
-      <b-form-group
-        label="メールアドレス(社内ドメインのみ許可)"
-        label-for="input-email"
-        description=""
-      >
-        <b-form-input
-          id="input-email"
-          v-model="email.value"
+    <div class="mb-6">
+      <div role="group" aria-labelledby="input-name-label" class="mb-4">
+        <label id="input-name-label" for="input-name" class="mb-2 inline-block">
+          氏名
+        </label>
+        <input
+          id="input-name"
+          v-model="nameValue"
           type="text"
-          :state="email.meta.touched ? email.meta.valid : null"
-          placeholder="メールアドレスを入力してください"
-        ></b-form-input>
-        <b-form-invalid-feedback :state="!email.meta.valid">
-          {{ email.errorMessage }}
-        </b-form-invalid-feedback>
-      </b-form-group>
-      <b-form-group label="年齢" label-for="input-age" description="">
-        <b-form-input
-          id="input-age"
-          v-model="age.value"
-          type="text"
-          :state="age.meta.touched ? age.meta.valid : null"
-          placeholder="年齢を半角数字で入力してください"
-        ></b-form-input>
-        <b-form-invalid-feedback :state="!age.meta.valid">
-          {{ age.errorMessage }}
-        </b-form-invalid-feedback>
-      </b-form-group>
-      <div>
-        <b-button
-          class="mr-2"
-          :disabled="hasError"
-          variant="info"
-          @click="onSubmit"
-          >送信</b-button
+          :state="nameMeta.touched ? nameMeta.valid : null"
+          :aria-invalid="nameMeta.valid ? 'false' : 'true'"
+          aria-errormessage="input-name-error"
+          aria-required="true"
+          placeholder="名前を入力してください"
+          class="input input-bordered w-full"
+          :class="nameMeta.dirty && !nameMeta.valid ? 'input-error' : ''"
+        />
+        <p
+          v-if="!nameMeta.valid"
+          id="input-name-error"
+          aria-live="polite"
+          class="text-error mt-2 text-sm"
         >
-        <b-button variant="danger" @click="onReset">リセット</b-button>
+          {{ nameErrorMessage }}
+        </p>
       </div>
-    </b-card-text>
-  </b-card>
+
+      <div role="group" aria-labelledby="input-email-label" class="mb-4">
+        <label
+          id="input-email-label"
+          for="input-email"
+          class="mb-2 inline-block"
+          >メールアドレス(社内ドメインのみ許可)</label
+        >
+        <input
+          id="input-email"
+          v-model="emailValue"
+          type="text"
+          :aria-invalid="emailMeta.valid ? 'false' : 'true'"
+          aria-errormessage="input-email-error"
+          aria-required="true"
+          placeholder="メールアドレスを入力してください"
+          class="input input-bordered w-full"
+          :class="emailMeta.dirty && !emailMeta.valid ? 'input-error' : ''"
+        />
+        <p
+          v-if="!emailMeta.valid"
+          id="input-email-error"
+          aria-live="polite"
+          class="text-error mt-2 text-sm"
+        >
+          {{ emailErrorMessage }}
+        </p>
+      </div>
+
+      <div role="group" aria-labelledby="input-age-label">
+        <label id="input-age-label" for="input-age" class="mb-2 inline-block"
+          >年齢</label
+        >
+        <input
+          id="input-age"
+          v-model="ageValue"
+          type="text"
+          :aria-invalid="ageMeta.valid ? 'false' : 'true'"
+          aria-errormessage="input-age-error"
+          aria-required="true"
+          placeholder="年齢を半角数字で入力してください"
+          class="input input-bordered w-full"
+          :class="ageMeta.dirty && !ageMeta.valid ? 'input-error' : ''"
+        />
+        <p
+          v-if="!ageMeta.valid"
+          id="input-age-error"
+          aria-live="polite"
+          class="text-error mt-2 text-sm"
+        >
+          {{ ageErrorMessage }}
+        </p>
+      </div>
+    </div>
+
+    <div class="flex gap-x-2">
+      <button
+        type="submit"
+        :disabled="!canSubmit"
+        class="btn btn-outline btn-success"
+      >
+        送信
+      </button>
+      <button type="reset" class="btn btn-outline btn-error" @click="onReset">
+        リセット
+      </button>
+    </div>
+  </form>
 </template>

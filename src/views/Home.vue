@@ -3,11 +3,9 @@ import Form from "../components/Form.vue";
 </script>
 
 <template>
-  <b-container>
-    <b-row class="justify-content-sm-center">
-      <b-col sm="6">
-        <Form />
-      </b-col>
-    </b-row>
-  </b-container>
+  <div class="grid justify-items-center">
+    <div class="max-w-md">
+      <Form></Form>
+    </div>
+  </div>
 </template>
