@@ -1,3 +1,7 @@
+<script lang="ts" setup>
+import Form from "../components/Form.vue";
+</script>
+
 <template>
   <b-container>
     <b-row class="justify-content-sm-center">
@@ -7,14 +11,3 @@
     </b-row>
   </b-container>
 </template>
-
-<script>
-import Form from "@/components/Form.vue";
-
-export default {
-  name: "Home",
-  components: {
-    Form,
-  },
-};
-</script>
