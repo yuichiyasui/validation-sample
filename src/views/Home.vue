@@ -1,20 +1,11 @@
-<template>
-  <b-container>
-    <b-row class="justify-content-sm-center">
-      <b-col sm="6">
-        <Form />
-      </b-col>
-    </b-row>
-  </b-container>
-</template>
-
-<script>
-import Form from "@/components/Form.vue";
-
-export default {
-  name: "Home",
-  components: {
-    Form,
-  },
-};
+<script lang="ts" setup>
+import Form from "../components/Form.vue";
 </script>
+
+<template>
+  <div class="grid justify-items-center">
+    <div class="max-w-md">
+      <Form></Form>
+    </div>
+  </div>
+</template>
