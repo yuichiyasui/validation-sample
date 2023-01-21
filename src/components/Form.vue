@@ -73,6 +73,18 @@ const onSubmit = (event: Event) => {
     }),
   );
 };
+
+const getInputClass = ({
+  isDirty,
+  isValid,
+}: {
+  isDirty: boolean;
+  isValid: boolean;
+}) => {
+  if (!isDirty) return "";
+  if (isValid) return "input-success";
+  return "input-error";
+};
 </script>
 
 <template>
@@ -98,7 +110,9 @@ const onSubmit = (event: Event) => {
           aria-required="true"
           placeholder="名前を入力してください"
           class="input input-bordered w-full"
-          :class="nameMeta.dirty && !nameMeta.valid ? 'input-error' : ''"
+          :class="
+            getInputClass({ isDirty: nameMeta.dirty, isValid: nameMeta.valid })
+          "
         />
         <p
           v-if="!nameMeta.valid"
@@ -126,7 +140,12 @@ const onSubmit = (event: Event) => {
           aria-required="true"
           placeholder="メールアドレスを入力してください"
           class="input input-bordered w-full"
-          :class="emailMeta.dirty && !emailMeta.valid ? 'input-error' : ''"
+          :class="
+            getInputClass({
+              isDirty: emailMeta.dirty,
+              isValid: emailMeta.valid,
+            })
+          "
         />
         <p
           v-if="!emailMeta.valid"
@@ -151,7 +170,9 @@ const onSubmit = (event: Event) => {
           aria-required="true"
           placeholder="年齢を半角数字で入力してください"
           class="input input-bordered w-full"
-          :class="ageMeta.dirty && !ageMeta.valid ? 'input-error' : ''"
+          :class="
+            getInputClass({ isDirty: ageMeta.dirty, isValid: ageMeta.valid })
+          "
         />
         <p
           v-if="!ageMeta.valid"
@@ -168,7 +189,7 @@ const onSubmit = (event: Event) => {
       <button
         type="submit"
         :disabled="!canSubmit"
-        class="btn btn-outline btn-success"
+        class="btn btn-outline btn-success disabled:btn-disabled"
       >
         送信
       </button>
