@@ -11,8 +11,6 @@
     "tsc": "vue-tsc --noEmit"
   },
   "dependencies": {
-    "@vee-validate/i18n": "^4.7.3",
-    "@vee-validate/rules": "^4.7.3",
     "vee-validate": "4.7.3",
     "vue": "3.2.36",
     "vue-router": "4.1.6"
